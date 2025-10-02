@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <footer th:fragment="footer" class="footer mt-auto py-4 bg-dark text-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="mb-3">
+                        <i class="bi bi-code-slash me-2"></i>
+                        Carlos Olivera
+                    </h5>
+                    <p class="text-muted mb-0">
+                        Software Developer & CrossFit Enthusiast<br>
+                        Building evidence-based solutions and pursuing continuous growth.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="mb-3">Connect</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light text-decoration-none">
+                            <i class="bi bi-linkedin fs-4"></i>
+                        </a>
+                        <a href="#" class="text-light text-decoration-none">
+                            <i class="bi bi-github fs-4"></i>
+                        </a>
+                        <a href="#" class="text-light text-decoration-none">
+                            <i class="bi bi-envelope fs-4"></i>
+                        </a>
+                        <a href="#" class="text-light text-decoration-none">
+                            <i class="bi bi-twitter fs-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="text-muted mb-0">
+                        &copy; <span th:text="${#dates.year(#dates.createNow())}">2024</span> Carlos Olivera. 
+                        All rights reserved. | 
+                        <span class="text-info">Evidence-based • Action-oriented • Hype-free</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
