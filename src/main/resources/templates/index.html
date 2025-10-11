@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Carlos Olivera</title>
+    <title>Inicio - Carlos Olivera</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,6 +11,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link th:href="@{/css/styles.css}" rel="stylesheet">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script th:src="@{/js/utils.js}"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -19,25 +23,48 @@
     <!-- Main Content -->
     <main class="container my-5">
         <!-- Hero Section -->
-        <section class="hero-section-banner text-center py-5 mb-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h1 class="display-3 fw-bold text-white mb-4">Carlos Olivera's Portfolio</h1>
-                    <p class="lead text-white-50 mb-4">
-                        Software Developer & CrossFit Enthusiast
-                    </p>
-                    <a href="#categories" class="btn btn-explore btn-lg px-5 py-3">Explore</a>
+        <section class="hero-section-banner py-5 mb-5">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-5 text-center">
+                    <div class="hero-image-container">
+                        <img th:src="@{/img/carloso.png}" alt="Carlos Olivera" class="hero-portrait img-fluid">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="hero-content p-4 p-md-5">
+                        <h1 class="display-3 fw-bold text-white mb-4">Portfolio de Carlos Olivera</h1>
+                        <p class="lead text-white-50 mb-4">
+                            Desarrollador de Software & Fanático del CrossFit
+                        </p>
+                        <p class="hero-tagline text-white-50 mb-4">
+                            <em>"Levanto pesas y bugs con la misma dedicación"</em>
+                        </p>
+                        <a href="#categories" class="btn btn-explore btn-lg px-5 py-3">Explorá</a>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- About Me Section -->
         <section class="about-section mb-5">
-            <h2 class="section-title mb-4">About Me</h2>
-            <p class="lead">
-                I'm Carlos, a software developer with a passion for technology and fitness. This site showcases my interests and curated 
-                resources in various fields, from software development to personal growth and finance. My approach is evidence-based and 
-                action-oriented, focusing on practical applications and continuous learning.
+            <h2 class="section-title mb-4">Sobre Mí</h2>
+            <p class="lead about-me-section">
+                Mi nombre es Carlos, pero la mayoría me dice Carloso.
+            </p>
+            <p class="lead about-me-section">
+                Hace <span th:data-registration-date="${#temporals.formatISO(timeSinceRegistration)}"
+                           x-data="timer($el.dataset.registrationDate)"
+                           x-init="init()"
+                           x-text="displayText"></span> que registr&eacute; este dominio y nunca le había agregado contenido, hasta ahora.
+                Con la llegada de la IA me quedé sin excusas, armar cualquier cosa es muy sencillo y este sitio no es la excepción. La mayoría de los textos que vean salen
+                directamente de algún LLM, no los cambio para dejarle su toque. En todas las interacciones le indico que use "español uruguayo" y digamos que el resultado está mal... pero no tan mal.
+                Acá va una traducción a español de pueblo de lo que chatGPT asume que la gente quiere leer en un sitio de este tipo.
+            </p>
+
+            <p class="lead about-me-section" style="margin-top: 3rem; position: relative; padding-left: 30px; padding-right: 30px;">
+                <span style="position: absolute; left: -10px; top: -10px; font-size: 4rem; color: #dee2e6; font-family: Georgia, serif; line-height: 0;">&ldquo;</span>
+                Soy desarrollador de software con pasión por la tecnología y el fitness <span style="font-style: italic; font-size: 0.9em; color: #6c757d;">(bajá un cambio, IA. Pasión es un montón)</span>. La idea de esta página personal es exponer mis intereses y presentar contenido curado de distintas áreas, desde nerdadas de códigos hasta artículos de crecimiento personal y finanzas. La idea es abordar los distintos temas respaldando la información con evidencia científica siempre que se pueda <span style="font-style: italic; font-size: 0.9em; color: #6c757d;">(puede fallar decía Tusam)</span>.
+                <span style="position: absolute; right: -10px; bottom: -30px; font-size: 4rem; color: #dee2e6; font-family: Georgia, serif; line-height: 0;">&rdquo;</span>
             </p>
         </section>
 
@@ -45,21 +72,21 @@
         <div id="categories">
             <!-- Nutrition & Health Category -->
             <section id="nutrition" class="category-card mb-5">
-                <h2 class="category-title mb-4">Nutrition & Health</h2>
+                <h2 class="category-title mb-4">Nutrición & Salud</h2>
                 <div class="row g-0 align-items-center">
                     <div class="col-md-5">
                         <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=600&fit=crop'); background-size: cover; background-position: center; height: 300px; border-radius: 0.75rem;"></div>
                     </div>
                     <div class="col-md-7">
                         <div class="category-content p-4">
-                            <h3 class="mb-3">Evidence-Based Nutrition</h3>
+                            <h3 class="mb-3">Nutrición Basada en Evidencia (o eso intentamos)</h3>
                             <p class="text-secondary mb-3">
-                                Explore resources on nutrition, diet, and healthy eating habits. Learn about the science behind nutrition and 
-                                how to make informed dietary choices. Discover evidence-based approaches to optimize your health through 
-                                proper nutrition and lifestyle modifications.
+                                Explorá recursos sobre nutrición, dieta y hábitos de alimentación saludable. Aprendé sobre la ciencia detrás de la nutrición y 
+                                cómo tomar decisiones informadas sobre lo que comés. Descubrí enfoques basados en evidencia para optimizar tu salud a través de 
+                                una nutrición adecuada y modificaciones en el estilo de vida (sí, sabemos que los bizcochos son tentadores).
                             </p>
                             <a href="/category/nutrition" class="btn btn-category">
-                                View all posts <i class="bi bi-arrow-right ms-2"></i>
+                                Ver todos los posts <i class="bi bi-arrow-right ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -75,14 +102,14 @@
                     </div>
                     <div class="col-md-7">
                         <div class="category-content p-4">
-                            <h3 class="mb-3">CrossFit Training</h3>
+                            <h3 class="mb-3">Entrenamiento CrossFit</h3>
                             <p class="text-secondary mb-3">
-                                Discover training programs, workout tips, and community insights. Enhance your CrossFit performance with 
-                                curated resources and expert advice. Learn about proper movement patterns, progressive overload principles, 
-                                and how to balance intensity with recovery.
+                                Descubrí programas de entrenamiento, consejos para los WODs y eso que llaman "comunidad". Mejorá tu rendimiento en CrossFit con 
+                                recursos curados y consejos de expertos (que en realidad son tan mortales como vos). Aprendé sobre patrones de movimiento correctos, principios de sobrecarga progresiva, 
+                                y cómo balancear la intensidad con la recuperación (porque al otro día hay que ir a laburar igual).
                             </p>
                             <a href="/category/crossfit" class="btn btn-category">
-                                Explore more <i class="bi bi-arrow-right ms-2"></i>
+                                Explorar más <i class="bi bi-arrow-right ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -91,21 +118,21 @@
 
             <!-- Personal Growth Category -->
             <section id="growth" class="category-card mb-5">
-                <h2 class="category-title mb-4">Personal Growth</h2>
+                <h2 class="category-title mb-4">Crecimiento Personal</h2>
                 <div class="row g-0 align-items-center">
                     <div class="col-md-5">
                         <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop'); background-size: cover; background-position: center; height: 300px; border-radius: 0.75rem;"></div>
                     </div>
                     <div class="col-md-7">
                         <div class="category-content p-4">
-                            <h3 class="mb-3">Mindset & Productivity</h3>
+                            <h3 class="mb-3">Mentalidad & Productividad</h3>
                             <p class="text-secondary mb-3">
-                                Improve your mindset, productivity, and personal development. Access resources on mindfulness, time 
-                                management, and goal setting. Build sustainable systems that compound over time and learn strategies 
-                                for continuous improvement across all areas of life.
+                                Mejorá tu mentalidad, productividad y desarrollo personal. Accedé a recursos sobre mindfulness (o como le decimos acá, "estar presente"), manejo del tiempo 
+                                y establecimiento de metas. Construí sistemas sostenibles que se van acumulando con el tiempo y aprendé estrategias 
+                                para la mejora continua en todas las áreas de la vida (sí, incluso para dejar de procrastinar viendo series).
                             </p>
                             <a href="/category/growth" class="btn btn-category">
-                                Learn more <i class="bi bi-arrow-right ms-2"></i>
+                                Aprender más <i class="bi bi-arrow-right ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -114,21 +141,21 @@
 
             <!-- Spring Boot & AI Category -->
             <section id="springboot" class="category-card mb-5">
-                <h2 class="category-title mb-4">Spring Boot & AI</h2>
+                <h2 class="category-title mb-4">Spring Boot & IA</h2>
                 <div class="row g-0 align-items-center">
                     <div class="col-md-5">
                         <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop'); background-size: cover; background-position: center; height: 300px; border-radius: 0.75rem;"></div>
                     </div>
                     <div class="col-md-7">
                         <div class="category-content p-4">
-                            <h3 class="mb-3">Software Development</h3>
+                            <h3 class="mb-3">Desarrollo de Software</h3>
                             <p class="text-secondary mb-3">
-                                Explore Spring Boot, AI, and other software development topics. Stay updated with the latest trends and best 
-                                practices in software engineering. Learn about microservices architecture, AI integration patterns, and 
-                                building scalable, maintainable applications.
+                                Explorá Spring Boot, IA y otras nerdadas de desarrollo de software. Mantenete al día con las últimas tendencias y mejores 
+                                prácticas en ingeniería de software (porque cada semana sale un framework nuevo, dale nomás). Aprendé sobre arquitectura de microservicios, patrones de integración de IA, y 
+                                cómo construir aplicaciones escalables y mantenibles (que no se caigan a pedazos a la primera de cambio).
                             </p>
                             <a href="/category/springboot" class="btn btn-category">
-                                View all <i class="bi bi-arrow-right ms-2"></i>
+                                Ver todo <i class="bi bi-arrow-right ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -137,21 +164,21 @@
 
             <!-- Crypto & Finance Category -->
             <section id="crypto" class="category-card mb-5">
-                <h2 class="category-title mb-4">Crypto & Finance</h2>
+                <h2 class="category-title mb-4">Cripto & Finanzas</h2>
                 <div class="row g-0 align-items-center">
                     <div class="col-md-5">
                         <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=800&h=600&fit=crop'); background-size: cover; background-position: center; height: 300px; border-radius: 0.75rem;"></div>
                     </div>
                     <div class="col-md-7">
                         <div class="category-content p-4">
-                            <h3 class="mb-3">Financial Literacy</h3>
+                            <h3 class="mb-3">Educación Financiera</h3>
                             <p class="text-secondary mb-3">
-                                Learn about cryptocurrency, finance, and investment strategies. Gain insights into financial markets and 
-                                investment opportunities. Understand risk management, portfolio diversification, and evidence-based 
-                                approaches to building long-term wealth.
+                                Aprendé sobre criptomonedas, finanzas y estrategias de inversión. Obtené información sobre mercados financieros y 
+                                oportunidades de inversión (no, no es consejo financiero, consulta a un profesional bo). Entendé la gestión de riesgos, diversificación de portafolio, y enfoques basados en evidencia 
+                                para construir riqueza a largo plazo (porque hacerse millonario de la noche a la mañana es cosa de películas).
                             </p>
                             <a href="/category/crypto" class="btn btn-category">
-                                Explore now <i class="bi bi-arrow-right ms-2"></i>
+                                Explorar ahora <i class="bi bi-arrow-right ms-2"></i>
                             </a>
                         </div>
                     </div>

@@ -149,9 +149,36 @@ h1, h2, h3, h4, h5, h6 {
 .hero-section-banner {
   background: linear-gradient(135deg, var(--color-charcoal) 0%, var(--color-yale-blue) 100%);
   border-radius: 1rem;
-  padding: 5rem 2rem;
+  padding: 2rem;
   margin-bottom: 4rem;
   box-shadow: 0 10px 30px var(--shadow-color);
+  overflow: hidden;
+}
+
+.hero-image-container {
+  padding: 1rem;
+}
+
+.hero-portrait {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border: 4px solid var(--color-sunset);
+  transition: all 0.3s ease;
+}
+
+.hero-portrait:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
 }
 
 .hero-section-banner h1 {
@@ -162,6 +189,14 @@ h1, h2, h3, h4, h5, h6 {
 .hero-section-banner .text-white-50 {
   color: rgba(255, 255, 255, 0.7) !important;
   font-size: 1.25rem;
+}
+
+.hero-tagline {
+  font-size: 1.1rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-left: 3px solid var(--color-sunset);
+  padding-left: 1rem;
 }
 
 .btn-explore {
@@ -416,6 +451,26 @@ section:last-child {
     font-size: 2.5rem;
   }
   
+  .hero-section-banner h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-section-banner {
+    padding: 2rem 1rem;
+  }
+  
+  .hero-image-container {
+    margin-bottom: 2rem;
+  }
+  
+  .hero-portrait {
+    max-width: 250px;
+  }
+  
+  .hero-content {
+    text-align: center;
+  }
+  
   .section-title {
     font-size: 2rem;
   }
@@ -439,6 +494,18 @@ section:last-child {
   
   .hero-section h1 {
     font-size: 2rem;
+  }
+  
+  .hero-section-banner h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-portrait {
+    max-width: 200px;
+  }
+  
+  .hero-tagline {
+    font-size: 1rem;
   }
   
   .section-title {
@@ -551,3 +618,180 @@ section:last-child {
 .card:nth-child(2) { animation-delay: 0.2s; }
 .card:nth-child(3) { animation-delay: 0.3s; }
 .card:nth-child(4) { animation-delay: 0.4s; }
+
+/* ========================================
+   CHANNEL CARDS (for recommended content creators)
+   ======================================== */
+.recommended-channels {
+  padding: 2rem 0;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 3rem;
+}
+
+.recommended-channels .section-header h2 {
+  color: var(--text-primary);
+  font-size: 1.75rem;
+}
+
+.recommended-channels .section-header p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.channel-card {
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out;
+  border-left: 4px solid var(--color-sunset);
+}
+
+.channel-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px var(--card-shadow);
+  border-left-color: var(--color-yale-blue);
+}
+
+.channel-icon-container {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.channel-profile-image {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-sunset);
+  box-shadow: 0 2px 8px var(--shadow-color);
+  transition: all 0.3s ease;
+}
+
+.channel-card:hover .channel-profile-image {
+  transform: scale(1.1);
+  border-color: var(--color-yale-blue);
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.channel-card .channel-icon {
+  transition: transform 0.3s ease;
+}
+
+.channel-card:hover .channel-icon i {
+  transform: scale(1.2);
+}
+
+.channel-card .card-title {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.channel-card .card-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.channel-card .btn {
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.channel-card .btn:hover {
+  background-color: var(--color-yale-blue);
+  color: white;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(8, 61, 119, 0.3);
+}
+
+/* Platform specific icon colors */
+.channel-card .bi-youtube {
+  color: #FF0000;
+}
+
+.channel-card .bi-instagram {
+  color: #E4405F;
+}
+
+.channel-card .bi-twitter-x {
+  color: #1DA1F2;
+}
+
+.channel-card .bi-tiktok {
+  color: #000000;
+}
+
+[data-theme="dark"] .channel-card .bi-tiktok {
+  color: #69C9D0;
+}
+
+/* Posts Section Header */
+.posts-section-header {
+  padding-top: 1rem;
+}
+
+.posts-section-header h2 {
+  color: var(--text-primary);
+  font-size: 1.75rem;
+}
+
+p.lead.about-me-section {
+    margin-bottom: 0;
+}
+
+/* ========================================
+   PERSONAL OPINION SECTION IN CHANNEL CARDS
+   ======================================== */
+.my-opinion-section {
+  background-color: var(--bg-secondary);
+  border-left: 3px solid var(--color-mountbatten-pink);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.my-opinion-section:hover {
+  border-left-color: var(--color-sunset);
+  background-color: var(--bg-tertiary);
+}
+
+.opinion-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-mountbatten-pink);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.opinion-header i {
+  font-size: 1rem;
+  color: var(--color-mountbatten-pink);
+}
+
+.opinion-label {
+  font-style: italic;
+}
+
+.opinion-text {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0;
+  padding-left: 0.25rem;
+}
+
+[data-theme="dark"] .my-opinion-section {
+  background-color: rgba(154, 135, 157, 0.1);
+}
+
+[data-theme="dark"] .my-opinion-section:hover {
+  background-color: rgba(246, 216, 174, 0.15);
+}
