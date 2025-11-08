@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import uy.com.antel.sandbox.carloso.carlosowebsite.model.Channel;
+import uy.com.antel.sandbox.carloso.carlosowebsite.model.ContentCreatorDTO;
+import uy.com.antel.sandbox.carloso.carlosowebsite.model.SocialLink;
+import uy.com.antel.sandbox.carloso.carlosowebsite.model.SocialPlatformUIMapper;
+import uy.com.antel.sandbox.carloso.carlosowebsite.services.ContentCreatorService;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +26,12 @@ public class HomeController {
 
     @Value("${domain.registration.date}")
     private String registrationDateString;
+
+    private final ContentCreatorService contentCreatorService;
+
+    public HomeController(final ContentCreatorService contentCreatorService) {
+        this.contentCreatorService = contentCreatorService;
+    }
 
     @GetMapping({"/", "/home", "/index"})
     public String home(final Model model) {
@@ -85,9 +94,9 @@ public class HomeController {
         model.addAttribute("hasMore", posts.size() >= 10);
         model.addAttribute("nextPage", 1);
         
-        // Get recommended channels for this category
-        List<Channel> channels = getChannelsForCategory(category);
-        model.addAttribute("channels", channels);
+        // Get recommended content creators for this category
+        List<ContentCreatorDTO> creators = getCreatorsForCategory(category);
+        model.addAttribute("creators", creators);
         
         return "category";
     }
@@ -208,114 +217,7 @@ public class HomeController {
         }
     }
 
-    // Helper method to get recommended channels for each category
-    private List<Channel> getChannelsForCategory(String category) {
-        List<Channel> channels = new ArrayList<>();
-        
-        switch (category) {
-            case "nutrition":
-                channels.add(createChannel(
-                        "Aries Terrón",
-                        "youtube",
-                    "https://www.youtube.com/@AriesTerron",
-                    "Licenciado en Nutrición y Nutriólogo Deportivo acreditado por la Federación Mexicana de Nutrición Deportiva",
-                        """
-                        Canal con un tono humorístico, irónico y que no tiene problemas de ir al choque contra todos los que tiran bolasos en las redes.
-                        Si ves algún video por ahí con mucha exposición pública tirando que la proteína hace mal o que la creatina hace que se te caiga el pelo,
-                        en algún momento Aries le cae con todo. Particularmente tomo creatina hace muchos años... y la proteína nunca me hizo mal.
-                        """,
-                        "bi-youtube",
-                    "https://yt3.googleusercontent.com/ytc/AIdro_mv50BKvSkbVJOIvuqi8Y13ib8vdbFFHK7oAZbjWvN6OtA=s160-c-k-c0x00ffffff-no-rj"));
-
-                channels.add(createChannel("Layne Norton", "instagram",
-                    "https://www.instagram.com/biolayne", 
-                    "PhD en Nutrición y culturista profesional", "bi-instagram"));
-
-                channels.add(createChannel("Abbey Sharp", "tiktok",
-                    "https://www.tiktok.com/@abbeyskitchen", 
-                    "Nutricionista registrada con contenido educativo", "bi-tiktok"));
-                break;
-                
-            case "crossfit":
-                channels.add(createChannel("CrossFit", "youtube", 
-                    "https://www.youtube.com/@CrossFit", 
-                    "Canal oficial de CrossFit con WODs y competencias",
-                    "",
-                        "bi-youtube",
-                    "https://yt3.googleusercontent.com/ytc/AIdro_kqYJXzYOr-1cXDqDLB9iHXvqYvLz6Ym4lC6BzX3A=s160-c-k-c0x00ffffff-no-rj"));
-                channels.add(createChannel("Mat Fraser", "instagram", 
-                    "https://www.instagram.com/mathewfras", 
-                    "5x campeón de los CrossFit Games", "bi-instagram"));
-                channels.add(createChannel("Wodprep", "twitter", 
-                    "https://twitter.com/wodprep", 
-                    "Programación y coaching para CrossFit", "bi-twitter-x"));
-                break;
-                
-            case "growth":
-                channels.add(createChannel("Ali Abdaal", "youtube", 
-                    "https://www.youtube.com/@aliabdaal", 
-                    "Productividad y crecimiento personal basado en ciencia",
-                    "",
-                        "bi-youtube",
-                    "https://yt3.googleusercontent.com/ytc/AIdro_mZ-xJX3HXvP4uXqYNIW5H0Z3MKGMi2UKvXKXhG2g=s160-c-k-c0x00ffffff-no-rj"));
-                channels.add(createChannel("Jay Shetty", "instagram", 
-                    "https://www.instagram.com/jayshetty", 
-                    "Autor y podcast host sobre propósito y mindfulness", "bi-instagram"));
-                channels.add(createChannel("Atomic Habits", "twitter", 
-                    "https://twitter.com/JamesClear", 
-                    "James Clear - Autor de Hábitos Atómicos", "bi-twitter-x"));
-                break;
-                
-            case "springboot":
-                channels.add(createChannel("Spring I/O", "youtube", 
-                    "https://www.youtube.com/@SpringIOConference", 
-                    "Conferencias y charlas sobre Spring Framework",
-                    "",
-                        "bi-youtube",
-                    "https://yt3.googleusercontent.com/ytc/AIdro_lMqSXjLp6xnEH0V_M0JxPQo8vPwGBT3KxJpOz9=s160-c-k-c0x00ffffff-no-rj"));
-                channels.add(createChannel("Josh Long", "twitter", 
-                    "https://twitter.com/starbuxman", 
-                    "Spring Developer Advocate en VMware", "bi-twitter-x"));
-                channels.add(createChannel("Amigoscode", "youtube", 
-                    "https://www.youtube.com/@amigoscode", 
-                    "Tutoriales de Spring Boot y desarrollo backend",
-                    "",
-                        "bi-youtube",
-                    "https://yt3.googleusercontent.com/ytc/AIdro_nD5nL0J8wQo6TpNxGsXDKxVx5BLqF5f-6HLbQi=s160-c-k-c0x00ffffff-no-rj"));
-                break;
-                
-            case "crypto":
-                channels.add(createChannel("Coin Bureau", "youtube", 
-                    "https://www.youtube.com/@CoinBureau", 
-                    "Análisis profundo de criptomonedas y blockchain",
-                    "",
-                        "bi-youtube",
-                    "https://yt3.googleusercontent.com/ytc/AIdro_m5X6pGxTZC-RWv6F4Hx0P_CpYFdqKxA1dJKFhM=s160-c-k-c0x00ffffff-no-rj"));
-                channels.add(createChannel("Vitalik Buterin", "twitter", 
-                    "https://twitter.com/VitalikButerin", 
-                    "Co-fundador de Ethereum", "bi-twitter-x"));
-                channels.add(createChannel("Crypto Banter", "youtube", 
-                    "https://www.youtube.com/@cryptobanter", 
-                    "Análisis diario de mercados cripto",
-                    "",
-                        "bi-youtube",
-                    "https://yt3.googleusercontent.com/ytc/AIdro_k0mN5xHQz8vL1B7C2Dy9RwP_8fYZfLqJmOx7pT=s160-c-k-c0x00ffffff-no-rj"));
-                break;
-        }
-        
-        return channels;
-    }
-
-    // Helper method to create a channel
-    private Channel createChannel(String name, String platform, String url,
-                                  String description, String icon) {
-        return new Channel(name, platform, url, description, null, icon, null);
-    }
-
-    // Overloaded helper method to create a channel with all properties
-    private Channel createChannel(final String name, final String platform, final String url,
-                                  final String description, final String myDescription,
-                                  String icon, String imageUrl) {
-        return new Channel(name, platform, url, description, myDescription, icon, imageUrl);
+    private List<ContentCreatorDTO> getCreatorsForCategory(String category) {
+        return this.contentCreatorService.getCreatorsForCategory(category);
     }
 }

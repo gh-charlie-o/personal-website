@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <body>
-    <!-- Channels List Fragment -->
+    <!-- Creators List Fragment -->
     <div th:fragment="channels-list">
         <section class="recommended-channels mb-5">
             <div class="section-header mb-4">
@@ -14,61 +14,67 @@
                 </p>
             </div>
             
-            <div class="row g-3" th:if="${channels != null and !channels.isEmpty()}">
-                <div class="col-12 col-md-6 col-lg-4" th:each="channel : ${channels}">
-                    <article class="channel-card card h-100 shadow-sm">
+            <!--/*@thymesVar id="creators" type="java.util.List<uy.com.antel.sandbox.carloso.carlosowebsite.model.ContentCreatorDTO>"*/-->
+            <div class="row g-3" th:if="${creators != null and !creators.isEmpty()}">
+                <div class="col-12 col-md-6 col-lg-4" th:each="creator : ${creators}">
+                    <article class="creator-card card h-100 shadow-sm">
                         <div class="card-body d-flex flex-column">
-                            <!-- Channel Header -->
+                            <!-- Creator Header -->
                             <div class="d-flex align-items-start mb-3">
-                                                <div class="channel-icon-container me-3">
-                                                    <!-- Show profile image if available, otherwise show platform icon -->
-                                                    <img th:if="${channel.imageUrl != null and !channel.imageUrl.isEmpty()}"
-                                                         th:src="${channel.imageUrl}" 
-                                                         th:alt="${channel.name}"
-                                                         class="channel-profile-image">
-                                                    <div th:if="${channel.imageUrl == null or channel.imageUrl.isEmpty()}" 
-                                                         class="channel-icon">
-                                                        <i th:class="'bi ' + ${channel.icon} + ' fs-1'"></i>
-                                                    </div>
+                                <div class="creator-icon-container me-3">
+                                    <!-- Show profile image if available, otherwise show a default icon -->
+                                    <img th:if="${creator.profileImageUrl != null and !creator.profileImageUrl.isEmpty}"
+                                         th:src="${creator.profileImageUrl}"
+                                         th:alt="${creator.name}"
+                                         class="creator-profile-image">
+                                    <div th:if="${creator.profileImageUrl == null or creator.profileImageUrl().isEmpty}"
+                                         class="creator-icon">
+                                        <i class="bi bi-person-circle fs-1"></i>
+                                    </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h3 class="card-title h5 mb-1" th:text="${channel.name}">Channel Name</h3>
-                                    <span class="badge bg-primary text-capitalize" th:text="${channel.platform}">Platform</span>
+                                    <h3 class="card-title h5 mb-1" th:text="${creator.name}">Creator Name</h3>
                                 </div>
                             </div>
                             
-                            <!-- Channel Description -->
-                            <p class="card-text text-secondary mb-3 flex-grow-1" th:text="${channel.description}">
-                                Channel description goes here...
+                            <!-- Creator Description -->
+                            <p class="card-text text-secondary mb-3 flex-grow-1" th:text="${creator.description}">
+                                Creator description goes here...
                             </p>
                             
                             <!-- Personal Opinion Section -->
-                            <div th:if="${channel.myDescription != null and !channel.myDescription.isEmpty()}" 
+                            <div th:if="${creator.personalDescription != null and !creator.personalDescription.isEmpty()}" 
                                  class="my-opinion-section mb-3">
                                 <div class="opinion-header">
                                     <i class="bi bi-person-circle me-1"></i>
                                     <span class="opinion-label">Mi opinión:</span>
                                 </div>
-                                <p class="opinion-text" th:text="${channel.myDescription}">
-                                    Personal take on the channel...
+                                <p class="opinion-text" th:text="${creator.personalDescription}">
+                                    Personal take on the creator...
                                 </p>
                             </div>
 
-                            <!-- Visit Button -->
-                            <a th:href="${channel.url}" 
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="btn btn-sm btn-outline-primary w-100">
-                                <i class="bi bi-box-arrow-up-right me-1"></i>
-                                Visitar Canal
-                            </a>
+                            <!-- Social Links Section -->
+                            <div class="social-links mt-auto">
+                                <p class="text-muted small mb-2">Seguir en:</p>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <a th:each="channel : ${creator.channels}"
+                                       th:href="${channel.url}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="text-primary fs-5"
+                                       th:title="${channel.platform}">
+                                        <i th:class="${channel.icon}"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </article>
                 </div>
             </div>
             
             <!-- Empty State -->
-            <div class="alert alert-info" th:if="${channels == null or channels.isEmpty()}">
+            <div class="alert alert-info" th:if="${creators == null or creators.isEmpty()}">
                 <i class="bi bi-info-circle me-2"></i>
                 No hay creadores de contenido recomendados para esta categoría aún.
             </div>
