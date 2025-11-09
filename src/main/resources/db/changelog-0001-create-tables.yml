@@ -1,0 +1,138 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0001-create-content-creators-and-channels
+      author: junie
+      changes:
+        - createTable:
+            tableName: content_creators
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_content_creators
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: personal_description
+                  type: TEXT
+              - column:
+                  name: profile_image_url
+                  type: VARCHAR(1024)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: website
+                  type: VARCHAR(512)
+              - column:
+                  name: external_id
+                  type: VARCHAR(100)
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+        - createTable:
+            tableName: channels
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_channels
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: VARCHAR(1024)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: platform
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: image_url
+                  type: VARCHAR(1024)
+              - column:
+                  name: content_creator_id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+        - createTable:
+            tableName: channel_categories
+            columns:
+              - column:
+                  name: channel_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: channels
+            baseColumnNames: content_creator_id
+            constraintName: fk_channels_content_creator
+            referencedTableName: content_creators
+            referencedColumnNames: id
+            onDelete: SET NULL
+        - addForeignKeyConstraint:
+            baseTableName: channel_categories
+            baseColumnNames: channel_id
+            constraintName: fk_channel_categories_channel
+            referencedTableName: channels
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addUniqueConstraint:
+            tableName: content_creators
+            columnNames: email
+            constraintName: uq_content_creators_email
+        - createIndex:
+            indexName: idx_content_creators_external_id
+            tableName: content_creators
+            columns:
+              - column:
+                  name: external_id
+        - createIndex:
+            indexName: idx_channels_name
+            tableName: channels
+            columns:
+              - column:
+                  name: name

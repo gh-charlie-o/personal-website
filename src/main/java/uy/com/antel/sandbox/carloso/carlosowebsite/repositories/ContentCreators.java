@@ -1,18 +1,8 @@
 package uy.com.antel.sandbox.carloso.carlosowebsite.repositories;
 
-import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
-import uy.com.antel.sandbox.carloso.carlosowebsite.domain.Channel;
-import uy.com.antel.sandbox.carloso.carlosowebsite.domain.ContentCreator;
-import uy.com.antel.sandbox.carloso.carlosowebsite.enums.ChannelCategory;
-import uy.com.antel.sandbox.carloso.carlosowebsite.enums.SocialPlatform;
-
-import java.util.ArrayList;
-import java.util.List;
-
-@Component
+//@Component
 public class ContentCreators {
-    public final List<ContentCreator> contentCreators = new ArrayList<>();
+    /*public final List<ContentCreator> contentCreators = new ArrayList<>();
 
     @PostConstruct
     public void onInit() {
@@ -68,5 +58,5 @@ public class ContentCreators {
 
     public void add(final ContentCreator contentCreator) {
         this.contentCreators.add(contentCreator);
-    }
+    }*/
 }
