@@ -2,7 +2,7 @@ package uy.com.antel.sandbox.carloso.carlosowebsite.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import uy.com.antel.sandbox.carloso.carlosowebsite.entities.Channel;
+import uy.com.antel.sandbox.carloso.carlosowebsite.domain.Channel;
 
 import java.util.List;
 import java.util.Optional;

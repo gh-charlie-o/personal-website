@@ -20,13 +20,13 @@ Goal: convert the current PoC classes into real JPA entities, add Liquibase chan
     - Ensure the spring boot version remains 3.5.6; make no other dependency upgrades
 
 3) Create JPA entities (transform classes into entities)
-    - Create entity `uy.com.antel.sandbox.carloso.carlosowebsite.entities.ContentCreator`
+    - Create entity `uy.com.antel.sandbox.carloso.carlosowebsite.domain.ContentCreator`
       • Annotate with `@Entity`, map table name `content_creators`
       • Provide id field `id` (Long, @Id, @GeneratedValue(strategy = GenerationType.IDENTITY))
       • Add sensible fields inferred from ContentCreators.java (e.g., name, email, bio, created_at, is_active, external_id, website, channel_id). If `Channel` relation exists, model many-to-one with Channel entity
       • Add `@Column` constraints and reasonable lengths
       • Add `@CreationTimestamp` and `@UpdateTimestamp` for audit fields if appropriate
-    - Create entity `uy.com.antel.sandbox.carloso.carlosowebsite.entities.Channel`
+    - Create entity `uy.com.antel.sandbox.carloso.carlosowebsite.domain.Channel`
       • Table name `channels`
       • id Long PK
       • name, slug, description, type, created_at, owner_id (or content_creator_id) as inferred

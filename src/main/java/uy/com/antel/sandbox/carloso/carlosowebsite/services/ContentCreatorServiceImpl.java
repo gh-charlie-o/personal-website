@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uy.com.antel.sandbox.carloso.carlosowebsite.entities.ContentCreator;
+import uy.com.antel.sandbox.carloso.carlosowebsite.domain.ContentCreator;
 import uy.com.antel.sandbox.carloso.carlosowebsite.enums.ChannelCategory;
 import uy.com.antel.sandbox.carloso.carlosowebsite.mappers.ContentCreatorMapper;
 import uy.com.antel.sandbox.carloso.carlosowebsite.model.ContentCreatorDTO;

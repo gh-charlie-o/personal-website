@@ -3,7 +3,7 @@ package uy.com.antel.sandbox.carloso.carlosowebsite.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import uy.com.antel.sandbox.carloso.carlosowebsite.entities.ContentCreator;
+import uy.com.antel.sandbox.carloso.carlosowebsite.domain.ContentCreator;
 import uy.com.antel.sandbox.carloso.carlosowebsite.enums.ChannelCategory;
 
 import java.util.List;

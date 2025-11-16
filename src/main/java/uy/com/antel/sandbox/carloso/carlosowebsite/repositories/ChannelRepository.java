@@ -1,7 +1,7 @@
 package uy.com.antel.sandbox.carloso.carlosowebsite.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import uy.com.antel.sandbox.carloso.carlosowebsite.entities.Channel;
+import uy.com.antel.sandbox.carloso.carlosowebsite.domain.Channel;
 
 import java.util.List;
 

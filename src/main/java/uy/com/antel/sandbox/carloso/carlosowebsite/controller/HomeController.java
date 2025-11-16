@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uy.com.antel.sandbox.carloso.carlosowebsite.model.ContentCreatorDTO;
-import uy.com.antel.sandbox.carloso.carlosowebsite.model.SocialLink;
-import uy.com.antel.sandbox.carloso.carlosowebsite.model.SocialPlatformUIMapper;
 import uy.com.antel.sandbox.carloso.carlosowebsite.services.ContentCreatorService;
+import uy.com.antel.sandbox.carloso.carlosowebsite.services.PostService;
+import uy.com.antel.sandbox.carloso.carlosowebsite.domain.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -28,9 +30,11 @@ public class HomeController {
     private String registrationDateString;
 
     private final ContentCreatorService contentCreatorService;
+    private final PostService postService;
 
-    public HomeController(final ContentCreatorService contentCreatorService) {
+    public HomeController(final ContentCreatorService contentCreatorService, final PostService postService) {
         this.contentCreatorService = contentCreatorService;
+        this.postService = postService;
     }
 
     @GetMapping({"/", "/home", "/index"})
@@ -88,10 +92,11 @@ public class HomeController {
         model.addAttribute("categoryTitle", info.get("title"));
         model.addAttribute("categoryDescription", info.get("description"));
         
-        // Get initial posts (page 0)
-        List<Map<String, Object>> posts = getPostsForCategory(category, 0);
+        // Get initial posts (page 0) from DB
+        Page<Post> page0 = postService.getPublishedByCategory(category, PageRequest.of(0, 10));
+        List<Map<String, Object>> posts = mapPostsForView(page0.getContent(), category);
         model.addAttribute("posts", posts);
-        model.addAttribute("hasMore", posts.size() >= 10);
+        model.addAttribute("hasMore", page0.hasNext());
         model.addAttribute("nextPage", 1);
         
         // Get recommended content creators for this category
@@ -107,15 +112,57 @@ public class HomeController {
             @RequestParam(defaultValue = "0") int page,
             Model model) {
         
-        // Get posts for the requested page
-        List<Map<String, Object>> posts = getPostsForCategory(category, page);
+        Page<Post> postPage = postService.getPublishedByCategory(category, PageRequest.of(page, 10));
+        List<Map<String, Object>> posts = mapPostsForView(postPage.getContent(), category);
         
         model.addAttribute("posts", posts);
         model.addAttribute("categorySlug", category);
-        model.addAttribute("hasMore", posts.size() >= 10 && page < 3); // Limit to 4 pages for demo
+        model.addAttribute("hasMore", postPage.hasNext());
         model.addAttribute("nextPage", page + 1);
         
         return "fragments/posts :: posts-htmx";
+    }
+
+    @GetMapping("/post/{id}")
+    public String postDetail(@PathVariable Long id, Model model) {
+        return postService.getPublishedById(id)
+                .map(post -> {
+                    String categorySlug = post.getCategory();
+                    Map<String, Map<String, String>> info = getCategoryInfo();
+                    String categoryTitle = info.getOrDefault(categorySlug, Map.of("title", categorySlug)).get("title");
+
+                    model.addAttribute("title", post.getTitle());
+                    model.addAttribute("categoryTitle", categoryTitle);
+                    model.addAttribute("categorySlug", categorySlug);
+                    model.addAttribute("date", post.getPublishedAt());
+                    model.addAttribute("readTime", (post.getReadTimeMinutes() != null ? post.getReadTimeMinutes() : 5) + " min de lectura");
+                    model.addAttribute("author", post.getAuthor());
+                    model.addAttribute("tags", post.getTags());
+                    model.addAttribute("coverImageUrl", post.getCoverImageUrl());
+                    model.addAttribute("content", post.getContent());
+
+                    return "post";
+                })
+                .orElse("redirect:/");
+    }
+
+    private List<Map<String, Object>> mapPostsForView(List<Post> postList, String categorySlug) {
+        List<Map<String, Object>> posts = new ArrayList<>();
+        String categoryTitle = getCategoryInfo().getOrDefault(categorySlug, Map.of("title", categorySlug)).get("title");
+        for (Post p : postList) {
+            Map<String, Object> m = new HashMap<>();
+            m.put("id", p.getId());
+            m.put("title", p.getTitle());
+            m.put("category", categoryTitle);
+            m.put("date", p.getPublishedAt() != null ? p.getPublishedAt() : LocalDate.now());
+            int rt = p.getReadTimeMinutes() != null ? p.getReadTimeMinutes() : 5;
+            m.put("readTime", rt + " min de lectura");
+            m.put("author", p.getAuthor());
+            m.put("excerpt", p.getExcerpt());
+            m.put("tags", p.getTags());
+            posts.add(m);
+        }
+        return posts;
     }
 
     // Helper method to get category information

@@ -1,0 +1,97 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0002-create-posts
+      author: junie
+      changes:
+        - createTable:
+            tableName: posts
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_posts
+                    nullable: false
+              - column:
+                  name: slug
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(300)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: published_at
+                  type: DATE
+              - column:
+                  name: read_time_minutes
+                  type: INT
+              - column:
+                  name: author
+                  type: VARCHAR(200)
+              - column:
+                  name: excerpt
+                  type: TEXT
+              - column:
+                  name: tags_csv
+                  type: VARCHAR(1000)
+              - column:
+                  name: content
+                  type: TEXT
+              - column:
+                  name: cover_image_url
+                  type: VARCHAR(1024)
+              - column:
+                  name: is_published
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+              - column:
+                  name: post_order
+                  type: INT
+                  defaultValueNumeric: 1
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: posts
+            columnNames: slug
+            constraintName: uq_posts_slug
+        - createIndex:
+            indexName: idx_posts_category
+            tableName: posts
+            columns:
+              - column:
+                  name: category
+        - createIndex:
+            indexName: idx_posts_published_at
+            tableName: posts
+            columns:
+              - column:
+                  name: published_at
+  - changeSet:
+      id: 0002-seed-first-post
+      author: junie
+      changes:
+        - sqlFile:
+            dbms: mysql
+            path: sql/initial_insert_post.sql
+            relativeToChangelogFile: false
+            splitStatements: true
+            endDelimiter: ;

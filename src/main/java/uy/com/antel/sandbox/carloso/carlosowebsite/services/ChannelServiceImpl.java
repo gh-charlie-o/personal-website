@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uy.com.antel.sandbox.carloso.carlosowebsite.entities.Channel;
+import uy.com.antel.sandbox.carloso.carlosowebsite.domain.Channel;
 import uy.com.antel.sandbox.carloso.carlosowebsite.repositories.ChannelRepository;
 
 import java.util.List;
