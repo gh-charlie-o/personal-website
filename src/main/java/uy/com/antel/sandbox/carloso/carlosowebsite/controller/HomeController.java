@@ -1,27 +1,25 @@
 package uy.com.antel.sandbox.carloso.carlosowebsite.controller;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import uy.com.antel.sandbox.carloso.carlosowebsite.domain.Post;
 import uy.com.antel.sandbox.carloso.carlosowebsite.model.ContentCreatorDTO;
+import uy.com.antel.sandbox.carloso.carlosowebsite.model.PostInfo;
+import uy.com.antel.sandbox.carloso.carlosowebsite.model.PostPreviewCard;
 import uy.com.antel.sandbox.carloso.carlosowebsite.services.ContentCreatorService;
 import uy.com.antel.sandbox.carloso.carlosowebsite.services.PostService;
-import uy.com.antel.sandbox.carloso.carlosowebsite.domain.Post;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class HomeController {
@@ -39,10 +37,16 @@ public class HomeController {
 
     @GetMapping({"/", "/home", "/index"})
     public String home(final Model model) {
+        model.addAttribute("authorName", "Carloso");
         ZonedDateTime registrationDate = ZonedDateTime.of(
                 2016, Month.AUGUST.getValue(), 16, 8, 0, 14, 0, ZoneOffset.ofHours(-3));
 
         model.addAttribute("timeSinceRegistration", registrationDate);
+
+        final List<PostPreviewCard> latestsPosts = this.postService.getLatestsPosts();
+        model.addAttribute("latestPosts", latestsPosts);
+
+        List<PostPreviewCard> posts = latestsPosts;
         //model.addAttribute("timeSinceRegistration", calculateTimeSinceRegistration());
         return "index";
     }

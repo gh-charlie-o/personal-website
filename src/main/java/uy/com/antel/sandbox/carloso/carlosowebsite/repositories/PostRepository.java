@@ -16,4 +16,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findByIdAndIsPublishedTrue(Long id);
 
     Optional<Post> findBySlugAndIsPublishedTrue(String slug);
+
+    Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

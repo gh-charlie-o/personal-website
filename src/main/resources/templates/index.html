@@ -1,93 +1,79 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Carlos Olivera</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link th:href="@{/css/styles.css}" rel="stylesheet">
+<html class="dark" lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::content})}">
 
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-    <script th:src="@{/js/utils.js}"></script>
-</head>
-<body>
-    <!-- Navigation -->
-    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
-    
-    <!-- Main Content -->
-    <main class="container my-5">
-        <!-- Hero Section -->
-        <section class="hero-section-banner py-5 mb-5">
-            <div class="row g-0 align-items-center">
-                <div class="col-md-5 text-center">
-                    <div class="hero-image-container">
-                        <img th:src="@{/img/carloso.png}" alt="Carlos Olivera" class="hero-portrait img-fluid">
-                    </div>
-                </div>
-                <div class="col-md-7">
-                    <div class="hero-content p-4 p-md-5">
-                        <h1 class="display-3 fw-bold text-white mb-4">Portfolio de Carlos Olivera</h1>
-                        <p class="lead text-white-50 mb-4">
-                            Desarrollador de Software & Fanático del CrossFit
-                        </p>
-                        <p class="hero-tagline text-white-50 mb-4">
-                            <em>"Levanto pesas y bugs con la misma dedicación"</em>
-                        </p>
-                        <a href="#categories" class="btn btn-explore btn-lg px-5 py-3">Explorá</a>
-                    </div>
-                </div>
+<th:block th:fragment="content">
+    <div class="py-16 md:py-24 px-4">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+            <div class="flex-shrink-0">
+                <img alt="Author's illustration" class="h-auto w-48 md:w-64 rounded-xl" th:src="@{/img/carloso.png}"/>
             </div>
-        </section>
+            <div class="text-center md:text-left">
+                <h1 class="text-primary dark:text-google-dark-text-primary text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em]">
+                    Explorando ideas, compartiendo un poco de lo que sé
+                </h1>
+                <p class="mt-4 max-w-xl text-text-primary dark:text-google-dark-text-secondary text-base md:text-lg font-normal leading-relaxed">
+                    Bienvenid@ a este rincón digital que armé medio porque quería, medio porque ya era hora.
+                    Soy desarrollador de software, curioso por naturaleza y fan de meterle cabeza a todo lo que
+                    sea aprender, mejorar y entender cómo funcionan las cosas
+                    <span class="comment-carloso">(Bajá 3 cambios, IA. ¿Curioso por naturaleza?, ¿fan de meterle cabeza a todo lo sea aprender?
+                        Es un montón)</span>. Acá vas a encontrar un poco de todo:
+                    tecnología, salud, CrossFit, finanzas, cosas que me sirven y cosas que simplemente me pintó compartir.
+                    No te preocupes, no es nada formal —es más bien un "mirá lo que encontré, capaz te sirve".
+                </p>
+                <p class="comment-carloso">
+                    La mayoría de los textos de este sitio son generados por "La IA". ¿Qué IA?, capaz que te preguntas, cualquiera
+                    en realidad, la que pinte en el momento, Gemini, ChatGPT, Claude, depende de que cuál esté abierto en un tab y
+                    quede más a mano. A veces a la IA se le va la moto y ahí van a ver algún comentario mío con este formato ;).
+                </p>
+            </div>
+        </div>
+    </div>
+    <h2 class="text-text-primary dark:text-google-dark-text-primary text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] px-4 pb-4 pt-5">Últimos artículos</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+        <div class="flex flex-col bg-white dark:bg-google-dark-card border border-slate-200 dark:border-google-dark-border rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+             th:each="post : ${latestPosts}">
+            <img class="h-40 w-full object-cover"
+                 th:alt="${post.title}"
+                 th:src="${post.coverImageUrl}"/>
+            <div class="p-5 flex flex-col flex-grow">
+                <p class="text-xs font-bold uppercase tracking-wider text-accent-red mb-2"
+                   th:text="${post.category}">Category</p>
+                <h3 class="text-text-primary dark:text-google-dark-text-primary text-lg font-bold leading-tight mb-2 flex-grow"
+                    th:text="${post.title}">Post title</h3>
+                <p class="text-slate-600 dark:text-google-dark-text-secondary text-sm font-normal leading-normal mb-4 line-clamp-3"
+                   th:text="${post.excerpt}">Post excerpt</p>
+                <a class="mt-auto text-sm font-bold text-primary dark:text-google-dark-link hover:underline"
+                   th:href="@{'/post/' + ${post.id}}">Leer más →</a>
+            </div>
+        </div>
+    </div>
 
-        <!-- About Me Section -->
-        <section class="about-section mb-5">
-            <h2 class="section-title mb-4">Sobre Mí</h2>
-            <p class="lead about-me-section">
-                Mi nombre es Carlos, pero la mayoría me dice Carloso.
-            </p>
-            <p class="lead about-me-section">
-                Hace <span th:data-registration-date="${#temporals.formatISO(timeSinceRegistration)}"
-                           x-data="timer($el.dataset.registrationDate)"
-                           x-init="init()"
-                           x-text="displayText"></span> que registr&eacute; este dominio y nunca le había agregado contenido, hasta ahora.
-                Con la llegada de la IA me quedé sin excusas, armar cualquier cosa es muy sencillo y este sitio no es la excepción. La mayoría de los textos que vean salen
-                directamente de algún LLM, no los cambio para dejarle su toque, aunque en algunos lados estoy obligado a agregar un comentario porque a la IA se le va la mano.
-                <span class="comment-carloso">Esas aclaraciones van a tener este formato que están viendo</span>. En todos los textos generados le indico que use "español uruguayo" y digamos que el resultado está mal... pero no tan mal.
-                Acá va una traducción a español de pueblo de lo que chatGPT asume que la gente quiere leer en una sección "About me".
-            </p>
+    <!-- Categorías -->
+    <div id="categories" class="px-4 py-8 md:py-12">
+        <h2 class="text-text-primary dark:text-google-dark-text-primary text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] mb-6">
+            Categorías
+        </h2>
 
-            <p class="lead about-me-section" style="margin-top: 3rem; position: relative; padding-left: 30px; padding-right: 30px;">
-                <span style="position: absolute; left: -10px; top: -10px; font-size: 4rem; color: #dee2e6; font-family: Georgia, serif; line-height: 0;">&ldquo;</span>
-                Soy desarrollador de software con pasión por la tecnología y el fitness <span class="comment-carloso">(bajá un cambio, IA. Pasión es un montón)</span>. La idea de esta página personal es exponer mis intereses y presentar contenido curado de distintas áreas, desde nerdadas de códigos hasta artículos de crecimiento personal y finanzas. La idea es abordar los distintos temas respaldando la información con evidencia científica siempre que se pueda <span style="font-style: italic; font-size: 0.9em; color: #6c757d;">(puede fallar decía Tusam)</span>.
-                <span style="position: absolute; right: -10px; bottom: -30px; font-size: 4rem; color: #dee2e6; font-family: Georgia, serif; line-height: 0;">&rdquo;</span>
-            </p>
-        </section>
-
-        <!-- Categories Section -->
-        <div id="categories">
+        <div class="flex flex-col gap-8">
             <!-- Nutrition & Health Category -->
-            <section id="nutrition" class="category-card mb-5">
-                <h2 class="category-title mb-4">Nutrición & Salud</h2>
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-5">
-                        <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=600&fit=crop'); background-size: cover; background-position: center; height: 300px; border-radius: 0.75rem;"></div>
+            <section id="nutrition" class="category-card">
+                <div class="flex flex-col md:flex-row items-stretch overflow-hidden rounded-xl border border-slate-200 dark:border-google-dark-border bg-white dark:bg-google-dark-card shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <div class="md:w-5/12">
+                        <div class="h-56 md:h-full w-full" style="background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=600&fit=crop'); background-size: cover; background-position: center;"></div>
                     </div>
-                    <div class="col-md-7">
-                        <div class="category-content p-4">
-                            <h3 class="mb-3">Nutrición Basada en Evidencia (o eso intentamos)</h3>
-                            <p class="text-secondary mb-3">
-                                Explorá recursos sobre nutrición, dieta y hábitos de alimentación saludable. Aprendé sobre la ciencia detrás de la nutrición y 
-                                cómo tomar decisiones informadas sobre lo que comés. Descubrí enfoques basados en evidencia para optimizar tu salud a través de 
-                                una nutrición adecuada y modificaciones en el estilo de vida (sí, sabemos que los bizcochos son tentadores).
-                            </p>
-                            <a href="/category/nutrition" class="btn btn-category">
-                                Ver todos los posts <i class="bi bi-arrow-right ms-2"></i>
+                    <div class="md:w-7/12 p-5 md:p-6 flex flex-col justify-center">
+                        <h2 class="category-title text-text-primary dark:text-google-dark-text-primary text-xl md:text-2xl font-extrabold mb-2">Nutrición & Salud</h2>
+                        <h3 class="text-text-primary dark:text-google-dark-text-primary text-lg font-bold mb-2">Nutrición Basada en Evidencia (o eso intentamos)</h3>
+                        <p class="text-slate-600 dark:text-google-dark-text-secondary text-sm md:text-base leading-relaxed mb-4">
+                            Explorá recursos sobre nutrición, dieta y hábitos de alimentación saludable. Aprendé sobre la ciencia detrás de la nutrición y
+                            cómo tomar decisiones informadas sobre lo que comés. Descubrí enfoques basados en evidencia para optimizar tu salud a través de
+                            una nutrición adecuada y modificaciones en el estilo de vida (sí, sabemos que los bizcochos son tentadores).
+                        </p>
+                        <div>
+                            <a href="/category/nutrition" class="inline-flex items-center gap-2 text-primary dark:text-google-dark-link font-semibold hover:underline">
+                                Ver todos los posts <span aria-hidden="true">→</span>
                             </a>
                         </div>
                     </div>
@@ -95,22 +81,22 @@
             </section>
 
             <!-- CrossFit Category -->
-            <section id="crossfit" class="category-card mb-5">
-                <h2 class="category-title mb-4">CrossFit</h2>
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-5">
-                        <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=600&fit=crop'); background-size: cover; background-position: center; height: 300px; border-radius: 0.75rem;"></div>
+            <section id="crossfit" class="category-card">
+                <div class="flex flex-col md:flex-row items-stretch overflow-hidden rounded-xl border border-slate-200 dark:border-google-dark-border bg-white dark:bg-google-dark-card shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <div class="md:w-5/12 order-first">
+                        <div class="h-56 md:h-full w-full" style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=600&fit=crop'); background-size: cover; background-position: center;"></div>
                     </div>
-                    <div class="col-md-7">
-                        <div class="category-content p-4">
-                            <h3 class="mb-3">Entrenamiento CrossFit</h3>
-                            <p class="text-secondary mb-3">
-                                Descubrí programas de entrenamiento, consejos para los WODs y eso que llaman "comunidad". Mejorá tu rendimiento en CrossFit con 
-                                recursos curados y consejos de expertos (que en realidad son tan mortales como vos). Aprendé sobre patrones de movimiento correctos, principios de sobrecarga progresiva, 
-                                y cómo balancear la intensidad con la recuperación (porque al otro día hay que ir a laburar igual).
-                            </p>
-                            <a href="/category/crossfit" class="btn btn-category">
-                                Explorar más <i class="bi bi-arrow-right ms-2"></i>
+                    <div class="md:w-7/12 p-5 md:p-6 flex flex-col justify-center">
+                        <h2 class="category-title text-text-primary dark:text-google-dark-text-primary text-xl md:text-2xl font-extrabold mb-2">CrossFit</h2>
+                        <h3 class="text-text-primary dark:text-google-dark-text-primary text-lg font-bold mb-2">Entrenamiento CrossFit</h3>
+                        <p class="text-slate-600 dark:text-google-dark-text-secondary text-sm md:text-base leading-relaxed mb-4">
+                            Descubrí programas de entrenamiento, consejos para los WODs y eso que llaman "comunidad". Mejorá tu rendimiento en CrossFit con
+                            recursos curados y consejos de expertos (que en realidad son tan mortales como vos). Aprendé sobre patrones de movimiento correctos, principios de sobrecarga progresiva,
+                            y cómo balancear la intensidad con la recuperación (porque al otro día hay que ir a laburar igual).
+                        </p>
+                        <div>
+                            <a href="/category/crossfit" class="inline-flex items-center gap-2 text-primary dark:text-google-dark-link font-semibold hover:underline">
+                                Explorar más <span aria-hidden="true">→</span>
                             </a>
                         </div>
                     </div>
@@ -118,22 +104,22 @@
             </section>
 
             <!-- Personal Growth Category -->
-            <section id="growth" class="category-card mb-5">
-                <h2 class="category-title mb-4">Crecimiento Personal</h2>
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-5">
-                        <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop'); background-size: cover; background-position: center; height: 300px; border-radius: 0.75rem;"></div>
+            <section id="growth" class="category-card">
+                <div class="flex flex-col md:flex-row items-stretch overflow-hidden rounded-xl border border-slate-200 dark:border-google-dark-border bg-white dark:bg-google-dark-card shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <div class="md:w-5/12">
+                        <div class="h-56 md:h-full w-full" style="background-image: url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop'); background-size: cover; background-position: center;"></div>
                     </div>
-                    <div class="col-md-7">
-                        <div class="category-content p-4">
-                            <h3 class="mb-3">Mentalidad & Productividad</h3>
-                            <p class="text-secondary mb-3">
-                                Mejorá tu mentalidad, productividad y desarrollo personal. Accedé a recursos sobre mindfulness (o como le decimos acá, "estar presente"), manejo del tiempo 
-                                y establecimiento de metas. Construí sistemas sostenibles que se van acumulando con el tiempo y aprendé estrategias 
-                                para la mejora continua en todas las áreas de la vida (sí, incluso para dejar de procrastinar viendo series).
-                            </p>
-                            <a href="/category/growth" class="btn btn-category">
-                                Aprender más <i class="bi bi-arrow-right ms-2"></i>
+                    <div class="md:w-7/12 p-5 md:p-6 flex flex-col justify-center">
+                        <h2 class="category-title text-text-primary dark:text-google-dark-text-primary text-xl md:text-2xl font-extrabold mb-2">Crecimiento Personal</h2>
+                        <h3 class="text-text-primary dark:text-google-dark-text-primary text-lg font-bold mb-2">Mentalidad & Productividad</h3>
+                        <p class="text-slate-600 dark:text-google-dark-text-secondary text-sm md:text-base leading-relaxed mb-4">
+                            Mejorá tu mentalidad, productividad y desarrollo personal. Accedé a recursos sobre mindfulness (o como le decimos acá, "estar presente"), manejo del tiempo
+                            y establecimiento de metas. Construí sistemas sostenibles que se van acumulando con el tiempo y aprendé estrategias
+                            para la mejora continua en todas las áreas de la vida (sí, incluso para dejar de procrastinar viendo series).
+                        </p>
+                        <div>
+                            <a href="/category/growth" class="inline-flex items-center gap-2 text-primary dark:text-google-dark-link font-semibold hover:underline">
+                                Aprender más <span aria-hidden="true">→</span>
                             </a>
                         </div>
                     </div>
@@ -141,22 +127,22 @@
             </section>
 
             <!-- Spring Boot & AI Category -->
-            <section id="springboot" class="category-card mb-5">
-                <h2 class="category-title mb-4">Spring Boot & IA</h2>
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-5">
-                        <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop'); background-size: cover; background-position: center; height: 300px; border-radius: 0.75rem;"></div>
+            <section id="springboot" class="category-card">
+                <div class="flex flex-col md:flex-row items-stretch overflow-hidden rounded-xl border border-slate-200 dark:border-google-dark-border bg-white dark:bg-google-dark-card shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <div class="md:w-5/12 order-first">
+                        <div class="h-56 md:h-full w-full" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop'); background-size: cover; background-position: center;"></div>
                     </div>
-                    <div class="col-md-7">
-                        <div class="category-content p-4">
-                            <h3 class="mb-3">Desarrollo de Software</h3>
-                            <p class="text-secondary mb-3">
-                                Explorá Spring Boot, IA y otras nerdadas de desarrollo de software. Mantenete al día con las últimas tendencias y mejores 
-                                prácticas en ingeniería de software (porque cada semana sale un framework nuevo, dale nomás). Aprendé sobre arquitectura de microservicios, patrones de integración de IA, y 
-                                cómo construir aplicaciones escalables y mantenibles (que no se caigan a pedazos a la primera de cambio).
-                            </p>
-                            <a href="/category/springboot" class="btn btn-category">
-                                Ver todo <i class="bi bi-arrow-right ms-2"></i>
+                    <div class="md:w-7/12 p-5 md:p-6 flex flex-col justify-center">
+                        <h2 class="category-title text-text-primary dark:text-google-dark-text-primary text-xl md:text-2xl font-extrabold mb-2">Spring Boot & IA</h2>
+                        <h3 class="text-text-primary dark:text-google-dark-text-primary text-lg font-bold mb-2">Desarrollo de Software</h3>
+                        <p class="text-slate-600 dark:text-google-dark-text-secondary text-sm md:text-base leading-relaxed mb-4">
+                            Explorá Spring Boot, IA y otras nerdadas de desarrollo de software. Mantenete al día con las últimas tendencias y mejores
+                            prácticas en ingeniería de software (porque cada semana sale un framework nuevo, dale nomás). Aprendé sobre arquitectura de microservicios, patrones de integración de IA, y
+                            cómo construir aplicaciones escalables y mantenibles (que no se caigan a pedazos a la primera de cambio).
+                        </p>
+                        <div>
+                            <a href="/category/springboot" class="inline-flex items-center gap-2 text-primary dark:text-google-dark-link font-semibold hover:underline">
+                                Ver todo <span aria-hidden="true">→</span>
                             </a>
                         </div>
                     </div>
@@ -164,43 +150,29 @@
             </section>
 
             <!-- Crypto & Finance Category -->
-            <section id="crypto" class="category-card mb-5">
-                <h2 class="category-title mb-4">Cripto & Finanzas</h2>
-                <div class="row g-0 align-items-center">
-                    <div class="col-md-5">
-                        <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=800&h=600&fit=crop'); background-size: cover; background-position: center; height: 300px; border-radius: 0.75rem;"></div>
+            <section id="crypto" class="category-card">
+                <div class="flex flex-col md:flex-row items-stretch overflow-hidden rounded-xl border border-slate-200 dark:border-google-dark-border bg-white dark:bg-google-dark-card shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <div class="md:w-5/12">
+                        <div class="h-56 md:h-full w-full" style="background-image: url('https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=800&h=600&fit=crop'); background-size: cover; background-position: center;"></div>
                     </div>
-                    <div class="col-md-7">
-                        <div class="category-content p-4">
-                            <h3 class="mb-3">Educación Financiera</h3>
-                            <p class="text-secondary mb-3">
-                                Aprendé sobre criptomonedas, finanzas y estrategias de inversión. Obtené información sobre mercados financieros y 
-                                oportunidades de inversión (no, no es consejo financiero, consulta a un profesional bo). Entendé la gestión de riesgos, diversificación de portafolio, y enfoques basados en evidencia 
-                                para construir riqueza a largo plazo (porque hacerse millonario de la noche a la mañana es cosa de películas).
-                            </p>
-                            <a href="/category/crypto" class="btn btn-category">
-                                Explorar ahora <i class="bi bi-arrow-right ms-2"></i>
+                    <div class="md:w-7/12 p-5 md:p-6 flex flex-col justify-center">
+                        <h2 class="category-title text-text-primary dark:text-google-dark-text-primary text-xl md:text-2xl font-extrabold mb-2">Cripto & Finanzas</h2>
+                        <h3 class="text-text-primary dark:text-google-dark-text-primary text-lg font-bold mb-2">Educación Financiera</h3>
+                        <p class="text-slate-600 dark:text-google-dark-text-secondary text-sm md:text-base leading-relaxed mb-4">
+                            Aprendé sobre criptomonedas, finanzas y estrategias de inversión. Obtené información sobre mercados financieros y
+                            oportunidades de inversión (no, no es consejo financiero, consulta a un profesional bo). Entendé la gestión de riesgos, diversificación de portafolio, y enfoques basados en evidencia
+                            para construir riqueza a largo plazo (porque hacerse millonario de la noche a la mañana es cosa de películas).
+                        </p>
+                        <div>
+                            <a href="/category/crypto" class="inline-flex items-center gap-2 text-primary dark:text-google-dark-link font-semibold hover:underline">
+                                Explorar ahora <span aria-hidden="true">→</span>
                             </a>
                         </div>
                     </div>
                 </div>
             </section>
         </div>
-    </main>
-    
-    <!-- Footer -->
-    <footer th:replace="~{fragments/footer :: footer}"></footer>
-    
-    <!-- Theme Toggle Button -->
-    <button id="theme-toggle" class="btn btn-outline-secondary position-fixed" style="top: 20px; right: 20px; z-index: 1050;">
-        <i class="bi bi-moon-fill" id="theme-icon"></i>
-    </button>
-    
-    <!-- htmx -->
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script th:src="@{/js/theme-toggle.js}"></script>
-</body>
+    </div>
+</th:block>
+
 </html>

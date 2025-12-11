@@ -10,5 +10,6 @@ public enum ChannelCategory {
     SPRING_BOOT,
     IA,
     CRYPTO,
-    FINANCES
+    FINANCES,
+    GENERAL_KNOWLEDGE
 }
