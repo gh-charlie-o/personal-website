@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog-0001-create-tables.yml
   - include:
       file: db/changelog-0002-create-posts.yml
+  - include:
+      file: db/changelog-0003-create-categories.yml

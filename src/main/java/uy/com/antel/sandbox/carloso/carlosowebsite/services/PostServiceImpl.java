@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uy.com.antel.sandbox.carloso.carlosowebsite.domain.Post;
 import uy.com.antel.sandbox.carloso.carlosowebsite.mappers.PostMapper;
+import uy.com.antel.sandbox.carloso.carlosowebsite.model.PostInfo;
 import uy.com.antel.sandbox.carloso.carlosowebsite.model.PostPreviewCard;
 import uy.com.antel.sandbox.carloso.carlosowebsite.repositories.PostRepository;
 
@@ -27,7 +28,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<Post> getPublishedByCategory(String category, Pageable pageable) {
-        return postRepository.findByCategoryAndIsPublishedTrueOrderByPostOrderDescPublishedAtDesc(category, pageable);
+        return postRepository.findByCategory_SlugAndIsPublishedTrueOrderByPostOrderDescPublishedAtDesc(category, pageable);
+    }
+
+    @Override
+    public List<PostPreviewCard> getPreviewPostPublishedByCategory(String category, Pageable pageable) {
+        return postRepository.findByCategory_SlugAndIsPublishedTrueOrderByPostOrderDescPublishedAtDesc(category, pageable).stream()
+                .map(postMapper::toPreviewCard).toList();
     }
 
     @Override
@@ -38,8 +45,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Optional<Post> getPublishedById(Long id) {
-        return postRepository.findByIdAndIsPublishedTrue(id);
+    public PostInfo getPublishedById(Long id) {
+        final Post post = this.postRepository.findByIdAndIsPublishedTrue(id).orElse(null);
+
+        if (post == null) {
+            return null;
+        }
+
+        return this.postMapper.toPostInfo(post);
     }
 
     @Override

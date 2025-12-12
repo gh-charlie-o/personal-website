@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "posts", indexes = {
         @Index(name = "idx_posts_slug", columnList = "slug", unique = true),
-        @Index(name = "idx_posts_category", columnList = "category"),
+        @Index(name = "idx_posts_category_id", columnList = "category_id"),
         @Index(name = "idx_posts_published_at", columnList = "published_at")
 })
 public class Post {
@@ -43,9 +43,9 @@ public class Post {
     @Column(name = "title", nullable = false, length = 300)
     private String title;
 
-    // store category slug, e.g., "nutrition", "springboot"
-    @Column(name = "category", nullable = false, length = 100)
-    private String category;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(name = "read_time_minutes")
     private Integer readTimeMinutes;

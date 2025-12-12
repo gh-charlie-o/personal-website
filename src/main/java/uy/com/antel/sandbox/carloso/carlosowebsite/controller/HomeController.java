@@ -3,16 +3,21 @@ package uy.com.antel.sandbox.carloso.carlosowebsite.controller;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uy.com.antel.sandbox.carloso.carlosowebsite.domain.Category;
 import uy.com.antel.sandbox.carloso.carlosowebsite.domain.Post;
+import uy.com.antel.sandbox.carloso.carlosowebsite.model.CategoryModel;
 import uy.com.antel.sandbox.carloso.carlosowebsite.model.ContentCreatorDTO;
 import uy.com.antel.sandbox.carloso.carlosowebsite.model.PostInfo;
 import uy.com.antel.sandbox.carloso.carlosowebsite.model.PostPreviewCard;
+import uy.com.antel.sandbox.carloso.carlosowebsite.services.CategoryService;
 import uy.com.antel.sandbox.carloso.carlosowebsite.services.ContentCreatorService;
 import uy.com.antel.sandbox.carloso.carlosowebsite.services.PostService;
 
@@ -28,11 +33,14 @@ public class HomeController {
     private String registrationDateString;
 
     private final ContentCreatorService contentCreatorService;
+    private final CategoryService categoryService;
     private final PostService postService;
 
-    public HomeController(final ContentCreatorService contentCreatorService, final PostService postService) {
+    public HomeController(final ContentCreatorService contentCreatorService, final PostService postService,
+                          final CategoryService categoryService) {
         this.contentCreatorService = contentCreatorService;
         this.postService = postService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping({"/", "/home", "/index"})
@@ -46,7 +54,8 @@ public class HomeController {
         final List<PostPreviewCard> latestsPosts = this.postService.getLatestsPosts();
         model.addAttribute("latestPosts", latestsPosts);
 
-        List<PostPreviewCard> posts = latestsPosts;
+        // Categories for dynamic rendering
+        model.addAttribute("categories", this.categoryService.findAllOrdered());
         //model.addAttribute("timeSinceRegistration", calculateTimeSinceRegistration());
         return "index";
     }
@@ -82,31 +91,22 @@ public class HomeController {
                 years, months, days, hours, minutes, seconds);
     }
 
-    @GetMapping("/category/{category}")
-    public String categoryPage(@PathVariable String category, Model model) {
-        // Category metadata
-        Map<String, Map<String, String>> categoryInfo = getCategoryInfo();
-        
-        if (!categoryInfo.containsKey(category)) {
+    @GetMapping("/category/{categorySlug}")
+    public String categoryPage(@PathVariable String categorySlug, Model model) {
+        final Optional<Category> categoryOpt = this.categoryService.findBySlug(categorySlug);
+
+        if (categoryOpt.isEmpty()) {
+            model.addAttribute("emptyCategory", true);
             return "redirect:/";
         }
-        
-        Map<String, String> info = categoryInfo.get(category);
-        model.addAttribute("categorySlug", category);
-        model.addAttribute("categoryTitle", info.get("title"));
-        model.addAttribute("categoryDescription", info.get("description"));
-        
-        // Get initial posts (page 0) from DB
-        Page<Post> page0 = postService.getPublishedByCategory(category, PageRequest.of(0, 10));
-        List<Map<String, Object>> posts = mapPostsForView(page0.getContent(), category);
-        model.addAttribute("posts", posts);
-        model.addAttribute("hasMore", page0.hasNext());
-        model.addAttribute("nextPage", 1);
-        
-        // Get recommended content creators for this category
-        List<ContentCreatorDTO> creators = getCreatorsForCategory(category);
-        model.addAttribute("creators", creators);
-        
+
+        final Category category = categoryOpt.get();
+
+        final List<PostPreviewCard> postModels = this.postService.getPreviewPostPublishedByCategory(categorySlug, Pageable.unpaged());
+
+        final CategoryModel categoryModel = new CategoryModel(category.getName(), category.getDescription(), postModels);
+        model.addAttribute("category", categoryModel);
+
         return "category";
     }
 
@@ -128,36 +128,26 @@ public class HomeController {
     }
 
     @GetMapping("/post/{id}")
-    public String postDetail(@PathVariable Long id, Model model) {
-        return postService.getPublishedById(id)
-                .map(post -> {
-                    String categorySlug = post.getCategory();
-                    Map<String, Map<String, String>> info = getCategoryInfo();
-                    String categoryTitle = info.getOrDefault(categorySlug, Map.of("title", categorySlug)).get("title");
+    public String postDetail(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        final PostInfo post = this.postService.getPublishedById(id);
 
-                    model.addAttribute("title", post.getTitle());
-                    model.addAttribute("categoryTitle", categoryTitle);
-                    model.addAttribute("categorySlug", categorySlug);
-                    model.addAttribute("date", post.getPublishedAt());
-                    model.addAttribute("readTime", (post.getReadTimeMinutes() != null ? post.getReadTimeMinutes() : 5) + " min de lectura");
-                    model.addAttribute("author", post.getAuthor());
-                    model.addAttribute("tags", post.getTags());
-                    model.addAttribute("coverImageUrl", post.getCoverImageUrl());
-                    model.addAttribute("content", post.getContent());
+        if (post == null) {
+            redirectAttributes.addFlashAttribute("message", "El post solicitado no existe.");
+            return "redirect:/";
+        }
 
-                    return "post";
-                })
-                .orElse("redirect:/");
+        model.addAttribute("post", post);
+
+        return "post";
     }
 
     private List<Map<String, Object>> mapPostsForView(List<Post> postList, String categorySlug) {
         List<Map<String, Object>> posts = new ArrayList<>();
-        String categoryTitle = getCategoryInfo().getOrDefault(categorySlug, Map.of("title", categorySlug)).get("title");
         for (Post p : postList) {
             Map<String, Object> m = new HashMap<>();
             m.put("id", p.getId());
             m.put("title", p.getTitle());
-            m.put("category", categoryTitle);
+            m.put("category", p.getCategory() != null ? p.getCategory().getName() : "");
             m.put("date", p.getPublishedAt() != null ? p.getPublishedAt() : LocalDate.now());
             int rt = p.getReadTimeMinutes() != null ? p.getReadTimeMinutes() : 5;
             m.put("readTime", rt + " min de lectura");

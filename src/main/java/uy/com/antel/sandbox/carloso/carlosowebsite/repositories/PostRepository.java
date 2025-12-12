@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Page<Post> findByCategoryAndIsPublishedTrueOrderByPostOrderDescPublishedAtDesc(String category, Pageable pageable);
+    Page<Post> findByCategory_SlugAndIsPublishedTrueOrderByPostOrderDescPublishedAtDesc(String categorySlug, Pageable pageable);
 
     Optional<Post> findByIdAndIsPublishedTrue(Long id);
 
